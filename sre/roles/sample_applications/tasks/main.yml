@@ -5,3 +5,4 @@
 - import_tasks: uninstall_deathstarbench_hotel_reservations.yaml
 - import_tasks: register_deployment_time.yaml
 - import_tasks: register_deployment_failure.yaml
+- import_tasks: Install_deathstarbench_socialnetwork.yaml
