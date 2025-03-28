@@ -1,168 +1,146 @@
-# ITBench for Site Reliability Engineering (SRE) and Financial Operations (FinOps)
+# ITBench
 
-**[Paper](../it_bench_arxiv.pdf) | [Incident Scenarios](./docs/incident_scenarios.md) | [Tools](./docs/tools.md) | [Maintainers](#maintainers)**
+**[Paper](./it_bench_arxiv.pdf) | [Scenarios](#scenarios) | [Agents](#agents) | [How to Cite]()| [Contributors](#contributors) | [Contacts](#contacts)**
+
+
+# 📢 Announcements
+
+## Latest Updates
+- **[February 7, 2025]** Initial release 0.1.0! 🎉 Includes research paper, self-hosted environment setup tooling, sample scenarios, and baseline agents
+
+## Coming Soon
+- **[March 2025]** Limited Access Beta 🏆
+Get invite-only access to the ITBench hosted scenario evnironments and be one of the first participants on our leaderboard. You register your SRE, FinOps, or CISO AI agent and prep it for interacting with the ITBench-hosted scenario environments.  ITBench automatically handles scenario deployment, agent evaluation, and leaderboard updates. To request access, e-mail us [here](agent-bench-automation@ibm.com).
+
+- **[April 2025]** Public Launch 🚀
+Complete ITBench platform access opens to all.
 
 ## Overview
-ITBench uses open source technologies to create completely repeatable and reproducible scenarios on a Kubernetes platform. A scenario involves deploying a set of observability tools, a sample application and triggering an incident (referred to as task) in the environment.
 
-![itbench_sre_task_scenario.png](./docs/itbench_sre_task_scenario.png)
-While this repository focuses on scenarios, an open-source Language Model (LM)-based SRE-Agent that aims to diagnose and remediate issues in these scenario environments can be found [here](https://github.com/IBM/itbench-sre-agent). 
+The goal of ITBench is to measure the performance of AI agents across a wide variety of complex and real-life IT automation tasks targetting three key personas:
+- Site Reliability Engineering (SRE) - focusing on availability and resiliency
+- Financial Operations (FinOps) - focusing on enforcing cost efficiencies and optimizing return on investment
+- Compliance and Security Operations (CISO) - focusing on ensuring compliance and security of IT implementations
 
-### Project Structure
+![sample_tasks](./images/sample_it_tasks.png)
+Through push-button workflows and interpretable metrics, it helps AI researchers and developers explore both the challenges and potential of IT automation.
 
-This project uses Ansible to automate the deployment and undeployment of technologies to a Kubernetes cluster and the injection and removal of faults. 
-The playbook run is configured using variables defined in `group\_vars`.
+ITBench centers on two core principles:
+1. Real-world representation of IT environments and incident scenarios that happen in such environments
+2. Open, extensible framework with comprehensive IT coverage
 
-| Directory                   | Purpose                                                                                                      |
-|-----------------------------|--------------------------------------------------------------------------------------------------------------|
-| `roles/observability_tools` | Handles  the deployment and removal of observability tools                                                   |
-| `roles/sample_applications` | Handles the deployment and removal of sample applications                                                    |
-| `roles/fault_injection`     | Provides reusable fault injection mechanisms                                                                 |
-| `roles/fault_removal`       | Provides mechanisms to remove (injected) faults from the environment                                         |
-| `roles/incident_`           | Contains scenarios that leverage the fault injection and removal mechanisms defined in the directories above |
+ITBench enables researchers and developers to replicate real-world incidents in Kubernetes environments (scenarios) and develop AI agents to address them.
+As of February 2025, we are open-sourcing:
+1. Push-button deployment tooling for environment setup
+2. Framework for recreating:
+   * 6 SRE scenarios
+   * 4 categories of CISO scenarios
+3. Two reference AI agents:
+   * CISO (Chief Information Security Officer) Agent
+   * SRE (Site Reliability Engineering) Agent
 
-## Recommended Software
+## Scenarios
+ITBench incorporates a collection of problems that we call scenarios. For example, one of the SRE scenarios in ITBench is to resolve a “High error rate on service order-management” in a Kubernetes environment. Another scenario that is relevant for the CISO persona involves assessing the compliance posture for a “new control rule detected for RHEL 9.” Each of the ITBench scenarios are deployed in an operational environment in which problem(s) occur. 
 
-### MacOS
+### CISO Scenarios
+These scenarios simulate compliance-related misconfigurations. Each scenario provides:
+- A pre-configured environment with specific compliance issues
+- Tools to detect misconfigurations
+- Validation methods to verify successful remediation
+CISO scenarios are located [here](./ciso).
 
-- [Homebrew](https://brew.sh/)
+### [SRE Scenarios](./sre)
+These scenarios focus on observability and incident response. Each scenario includes:
+- A comprehensive observability stack deployment featuring:
+  - Prometheus for metrics collection
+  - Grafana for visualization and single mode of API interactions for agents 
+  - Loki for log aggregation
+  - Elasticsearch and OpenSearch for search and analytics
+  - Jaeger for distributed tracing
+  - Kubernetes events exporter
+- Simulated faults that trigger service degradation
+- Thereby leading to alerts associated with application performance issues such as increased error rates and latency spikes
+  SRE scenarios are located [here](./sre).
 
-## Required Software
+### [FinOps Scenarios](./sre)
+Each scenario includes:
+- The core SRE observability stack
+- OpenCost integration for cost monitoring
+- Simulated faults trigger cost overrun alerts
+ FinOps scenarios are located [here](./sre) along-side SRE scenarios.
 
-- [Python3](https://www.python.org/downloads/) (v3.12.Z)
-- [Helm](https://helm.sh/docs/intro/install/) (v3.16+)
-- [Kubectl](https://kubernetes.io/docs/tasks/tools/)
+## Agents
+Two baseline agents (SRE-FinOps and CISO) are being open-sourced with the ITBench.
+We use the open-source CrewAI framework to create and manage agents.
+The agents can be configured to use various LLMs either through watsonx, Azure, or vLLM.
+Each agent is initialized with a prompt that describes its goal, the context, the tasks, and the expected output format.
+In-context learning examples are included to guide the agent and demonstrate tool usage.
+Agents use natural language to access tools to interact with the environment for information gathering.
 
-### Installing Required Software via Homebrew (MacOS)
+### CAA Agent
+Source code repository [here](https://github.com/IBM/itbench-ciso-caa-agent).
 
-1. Install [Homebrew](https://brew.sh/)
+### SRE Agent
+Source code repository [here](https://github.com/IBM/itbench-sre-agent).
 
-2. Install required software
-```bash
-brew install helm
-brew install kubectl
-brew install python@3.12
+### How to Cite
+```
+@misc{jha2025itbench,
+      title={ITBench: Evaluating AI Agents across Diverse Real-World IT Automation Tasks},
+      author={Jha, Saurabh and Arora, Rohan and Watanabe, Yuji and others},
+      year={2025},
+      url={https://github.com/IBM/itbench-sample-scenarios/blob/main/it_bench_arxiv.pdf}
+}
 ```
 
-## Getting Started – Deploying an Incident Scenario
+## Contributors
+- Saurabh Jha
+- Rohan Arora
+- Yuji Watanabe
+- Takumi Yanagawa
+- Yinfang Chen (UIUC - University of Illinois at Urbana-Champaign)
+- Jackson Clark (UIUC - University of Illinois at Urbana-Champaign)
+- Bhavya Bhavya
+- Mudit Verma
+- Harshit Kumar
+- Hirokuni Kitahara
+- Noah Zheutlin
+- Saki Takano
+- Divya Pathak
+- Felix George
+- Xinbo Wu (UIUC - University of Illinois at Urbana-Champaign)
+- Bekir O Turkkan
+- Gerard Vanloo
+- Michael Nidd
+- Ting Dai
+- Oishik Chatterjee
+- Pranjal Gupta
+- Suranjana Samanta
+- Pooja Aggarwal
+- Rong Lee
+- Pavankumar Murali
+- Jae-wook Ahn
+- Debanjana Kar
+- Ameet Rahane
+- Carlos Fonseca
+- Amit Paradkar
+- Yu Deng
+- Pratibha Moogi
+- Prateeti Mohapatra
+- Naoki Abe
+- Chandrasekhar Narayanaswami
+- Tianyin Xu (UIUC - University of Illinois at Urbana-Champaign)
+- Lav R. Varshney (UIUC - University of Illinois at Urbana-Champaign)
+- Ruchi Mahindru
+- Anca Sailer
+- Laura Shwartz
+- Daby Sow
+- Nicholas C. M. Fuller
+- Ruchir Puri
 
-### Installing Dependencies
-
-1. Create a Python virtual environment
-```bash
-python3.12 -m venv venv
-source venv/bin/activate
-```
-
-2. Install Python dependencies
-```bash
-python -m pip install -r requirements.txt
-```
-
-3. Install Ansible collections.
-```bash
-ansible-galaxy install -r requirements.yaml
-```
-
-_Note: These steps only need to be done once upon the initial set up._
-_Note: Depending on what kind of cluster setup is needed, further dependencies may need to be installed. Please see the below section for further details._
-
-### Cluster Setup
-
-#### Local Cluster
-
-For instruction on how to create a kind cluster, please see the instructions [here](./local_cluster/README.md).
-
-#### Remote Cluster
-
-For instruction on how to create an cloud provider based Kubernetes cluster, please see the instructions [here](./remote_cluster/README.md). 
-
-Currently, only AWS is supported. AWS clusters are provisioned using [kOps](https://kops.sigs.k8s.io/).
-
-### Running the Incident Scenarios
-
-Now that our cluster is up and running, let's proceed with the deployment of the observability tools and application stack, injecting the fault, and monitoring of alerts in the Grafana dashboard.
-
-1. Create the `all.yaml` file from the template and update the `kubeconfig` field with the path to the configuration of the Kubernetes cluster. While the file creation needs only to be done once, the `kubeconfig` field must be updated if the file path changes or the cluster you intend to leverage changes.
-
-```bash
-cp group_vars/all.yaml.example group_vars/all.yaml
-```
-
-2. Deploy the observability tools. 
-
-```bash
-make deploy_observability_stack
-```
-The observability tools deployment includes Prometheus, Grafana, Loki, Elasticsearch, Jaeger, OpenSearch and K8s-events-exporter. For additional details on the observability tools deployed please head [here](./docs/tools.md).
-
-3. Deploy one of the sample applications. In this case we are deploying OpenTelemetery's Astronomy Shop Demo.
-
-```bash
-make deploy_astronomy_shop
-```
-Currently IT-Bench supports two sample applications--OpenTelemetery's Astronomy Shop Demo and Deathstartbench's Hotel Reservation. For additional details on the sample applications please head [here](./docs/sample_applications.md).
-
-4. Once all pods are running, inject the fault for an incident.
-
-```bash
-INCIDENT_NUMBER=1 make inject_incident_fault
-```
-Currently the incident scenarios open-sourced are incidents 1, 3, 23, 26, 27, and 102. One can leverage any one of these incidents at this point in time in their own environemnts. Additional details on the incident scenarios themselves and the fault mechanisms can be found [here].
-
-5. After fault injection, to view alerts in the grafana dashboard, use Port Forward to access the Grafana service.
-
-```bash
-kubectl port-forward svc/ingress-nginx-controller -n ingress-nginx 8080:80
-```
-
-6. To view Grafana dashboard in your web browser, use the following URL: 
-
-```bash
-http://localhost:8080/prometheus/alerting/list
-```
-
-7. In the right panel, under the `Grafana` section, click on the `AstronomyNotifications` folder to view the alerts on the dashboard. Four alerts are defined:
-- To track `error` across the different services
-- To track `latency` across the different services
-- To track status of deployments across the different namespaces
-- To track Kafka connection status across the Kafka-related components
-An Alert's default `State` is `Normal`. After few minutes, the fault `State` changes to `Firing`, indicating fault manifestation. The alert definitions for Grafana located [here](roles/observability_tools/tasks/alert_rules) and has been curated using this [guide](https://grafana.com/docs/grafana/latest/alerting/alerting-rules/create-grafana-managed-rule/). 
-
-8. (Optional) You only need to do this if you plan to leverage our [SRE-Agent](https://github.com/IBM/itbench-sre-agent). Port forward the topology mapper service by running. 
-```bash
-kubectl -n kube-system port-forward svc/topology-monitor 8081:8080
-```
-
-9. (Optional) You only need to do this if you plan to leverage our [SRE-Agent](https://github.com/IBM/itbench-sre-agent). Leverage the values below for the `.env.tmpl`
-```
-GRAFANA_URL=http://localhost:8080/prometheus
-TOPOLOGY_URL=http://localhost:8081
-```
-
-10. To remove the injected fault, run the following `make` command:
-
-```bash
-INCIDENT_NUMBER=1 make remove_incident_fault
-```
-After executing the command, the alert's `State` should change back to `Normal` from `Firing`, indicating that the fault has been removed.
-
-11. Once done you can undeploy the observability, followed by the application stack by running:
-```bash
-make undeploy_astronomy_shop
-make undeploy_observability_stack
-```
-
-_Note_: For a full list of `make` commands, run the following command:
-
-```bash
-make help
-```
-
-## Maintainers
-- Mudit Verma - [@mudverma](https://github.com/mudverma)
-- Divya Pathak - [@divyapathak24](https://github.com/divyapathak24)
-- Felix George - [@fali007](https://github.com/fali007)
-- Ting Dai - [@tingdai](https://github.com/tingdai)
-- Gerard Vanloo - [@Red-GV](https://github.com/Red-GV)
-- Bekir O Turkkan - [@bekiroguzhan](https://github.com/bekiroguzhan)
+## Contacts
+- agent-bench-automation@ibm.com
+- Saurabh Jha (saurabh.jha@ibm.com)
+- Yuji Wantabe (muew@jp.ibm.com)
+- Ruchi Mahindru (rmahindr@us.ibm.com)
+- Anca Sailer (ancas@us.ibm.com)
